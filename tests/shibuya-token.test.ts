@@ -26,7 +26,7 @@ describe("Describe entity assertions", () => {
   });
 
   test("Transfer entity created and owner field set", () => {
-    // Check that exactly 1 Transfer entity exists
+    // Memo: Check that exactly 1 Transfer entity exists
     assert.entityCount("Transfer", 1);
 
     // Check the value field
