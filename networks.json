@@ -1,0 +1,8 @@
+{
+  "soneium-testnet": {
+    "ShibuyaToken": {
+      "address": "0x6865ed695E0e5fe00Ee6D98800b66E6C1eb45652",
+      "startBlock": 7810435
+    }
+  }
+}
