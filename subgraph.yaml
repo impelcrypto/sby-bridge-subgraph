@@ -8,7 +8,7 @@ dataSources:
     name: ShibuyaToken
     network: soneium-testnet
     source:
-      address: "0x6865ed695E0e5fe00Ee6D98800b66E6C1eb45652"
+      address: "0x3c1F7c5f4C560afFCFe2b5ebF1271c3310867ff4"
       abi: ShibuyaToken
       startBlock: 7810435
     mapping:
@@ -31,26 +31,6 @@ dataSources:
         - name: ShibuyaToken
           file: ./abis/ShibuyaToken.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,uint256)
-          handler: handleApproval
-        - event: CrosschainBurn(indexed address,uint256,indexed address)
-          handler: handleCrosschainBurn
-        - event: CrosschainMint(indexed address,uint256,indexed address)
-          handler: handleCrosschainMint
-        - event: Initialized(uint64)
-          handler: handleInitialized
-        - event: OwnershipTransferRequested(indexed address,indexed address)
-          handler: handleOwnershipTransferRequested
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
-          handler: handleRoleAdminChanged
-        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
-          handler: handleRoleGranted
-        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
-          handler: handleRoleRevoked
         - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-        - event: Upgraded(indexed address)
-          handler: handleUpgraded
+          handler: handleTransferEvent
       file: ./src/shibuya-token.ts

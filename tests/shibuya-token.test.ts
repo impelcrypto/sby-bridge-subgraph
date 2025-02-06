@@ -1,62 +1,51 @@
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 import {
+  afterAll,
   assert,
+  beforeAll,
+  clearStore,
   describe,
   test,
-  clearStore,
-  beforeAll,
-  afterAll
-} from "matchstick-as/assembly/index"
-import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts"
-import { Approval } from "../generated/schema"
-import { Approval as ApprovalEvent } from "../generated/ShibuyaToken/ShibuyaToken"
-import { handleApproval } from "../src/shibuya-token"
-import { createApprovalEvent } from "./shibuya-token-utils"
-
-// Tests structure (matchstick-as >=0.5.0)
-// https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
+} from "matchstick-as/assembly/index";
+import { handleTransferEvent } from "../src/shibuya-token";
+import { createTransferEvent } from "./shibuya-token-utils";
 
 describe("Describe entity assertions", () => {
   beforeAll(() => {
-    let owner = Address.fromString("0x0000000000000000000000000000000000000001")
-    let spender = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )
-    let value = BigInt.fromI32(234)
-    let newApprovalEvent = createApprovalEvent(owner, spender, value)
-    handleApproval(newApprovalEvent)
-  })
+    const from = Address.fromString(
+      "0x0000000000000000000000000000000000000000"
+    );
+    const to = Address.fromString("0x0000000000000000000000000000000000000002");
+    const value = BigInt.fromString("3000000000000000000");
+    const newTransferEvent = createTransferEvent(from, to, value);
+    handleTransferEvent(newTransferEvent);
+  });
 
   afterAll(() => {
-    clearStore()
-  })
+    clearStore();
+  });
 
-  // For more test scenarios, see:
-  // https://thegraph.com/docs/en/developer/matchstick/#write-a-unit-test
+  test("Transfer entity created and owner field set", () => {
+    // Check that exactly 1 Transfer entity exists
+    assert.entityCount("Transfer", 1);
 
-  test("Approval created and stored", () => {
-    assert.entityCount("Approval", 1)
+    // Check the value field
+    assert.fieldEquals("Transfer", "0", "value", "3000000000000000000");
 
-    // 0xa16081f360e3847006db660bae1c6d1b2e17ec2a is the default address used in newMockEvent() function
+    // Check that the entity has the correct from address
     assert.fieldEquals(
-      "Approval",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-      "owner",
-      "0x0000000000000000000000000000000000000001"
-    )
-    assert.fieldEquals(
-      "Approval",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-      "spender",
-      "0x0000000000000000000000000000000000000001"
-    )
-    assert.fieldEquals(
-      "Approval",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-      "value",
-      "234"
-    )
+      "Transfer",
+      "0", //the id of the entity
+      "from",
+      "0x0000000000000000000000000000000000000000"
+    );
 
-    // More assert options:
-    // https://thegraph.com/docs/en/developer/matchstick/#asserts
-  })
-})
+    // Check that the entity has the correct to address
+    assert.fieldEquals(
+      "Transfer",
+      "0",
+      "to",
+      "0x0000000000000000000000000000000000000002"
+    );
+  });
+});
